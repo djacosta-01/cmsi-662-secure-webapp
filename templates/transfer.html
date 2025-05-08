@@ -1,0 +1,12 @@
+<h1>Make a Transfer</h1>
+
+<form method="POST" action="/transfer">
+  <pre>
+  From   <input name="from" />
+  To     <input name="to" />
+  Amount <input name="amount" />
+         <input type="submit" value="Transfer">
+  </pre>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />                         -->
+</form>
+<p><a href="/dashboard">Back to Dashboard</a></p>

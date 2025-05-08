@@ -1,0 +1,9 @@
+{% if error %}
+<p style="color: red">{{ error }}</p>
+{% endif %}
+<form method="post" action="/login">
+  <p>Email: <input type="text" name="email" /></p>
+  <p>Password: <input type="password" name="password" /></p>
+  <p><input type="submit" value="Login" /></p>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+</form>
