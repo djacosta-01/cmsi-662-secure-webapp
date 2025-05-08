@@ -15,17 +15,32 @@ def get_user_with_credentials(email, password):
     try:
         con = sqlite3.connect("bank.db")
         cur = con.cursor()
+
+        # getting default password hash to compare against for non-existent users
+        # used to perform the same amount of work for valid and invalid users
+        cur.execute("SELECT password FROM users LIMIT 1")
+        default_hash_row = cur.fetchone()
+        default_hash = (
+            default_hash_row[0] if default_hash_row else pbkdf2_sha256.hash("default")
+        )
+
+        # Query for the user
         cur.execute(
             """
             SELECT email, name, password FROM users where email=?""",
             (email,),
         )
         row = cur.fetchone()
+
         if row is None:
+            # For non-existent users, still do the password verification work to ensure timing is similar
+            pbkdf2_sha256.verify(password, default_hash)
             return None
+
         email, name, hash = row
         if not pbkdf2_sha256.verify(password, hash):
             return None
+
         return {"email": email, "name": name, "token": create_token(email)}
     finally:
         con.close()

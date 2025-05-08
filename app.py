@@ -10,7 +10,6 @@ load_dotenv()
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET")
 csrf = CSRFProtect(app)
-print("SECRET_KEY", app.config["SECRET_KEY"])
 
 
 @app.route("/", methods=["GET"])
@@ -25,8 +24,10 @@ def login():
     email = request.form.get("email")
     password = request.form.get("password")
     user = get_user_with_credentials(email, password)
+
     if not user:
-        return render_template("login.html", error="Invalid credentials")
+        return render_template("login.html", error="Invalid email or password")
+
     response = make_response(redirect("/dashboard"))
     response.set_cookie("auth_token", user["token"])
     return response, 303
