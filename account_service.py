@@ -38,12 +38,12 @@ def get_user_accounts(owner):
         con.close()
 
 
-def do_transfer(source, target, amount):
+def do_transfer(source, target, amount, owner=None):
     """
     Performs a transfer between accounts.
     Returns:
         - True if the transfer was successful
-        - False if target account does not exist
+        - False if target account does not exist or source account doesn't belong to owner
     Raises:
         - Exception if any other error occurs
     """
@@ -51,7 +51,17 @@ def do_transfer(source, target, amount):
         con = sqlite3.connect("bank.db")
         cur = con.cursor()
 
-        # Check if target account exists
+        # Check if source account belongs to owner (if owner is provided)
+        if owner is not None:
+            cur.execute(
+                """
+                SELECT id FROM accounts WHERE id=? AND owner=?""",
+                (source, owner),
+            )
+            row = cur.fetchone()
+            if row is None:
+                return False  # Source account doesn't exist or doesn't belong to owner
+
         cur.execute(
             """
             SELECT id FROM accounts where id=?""",
@@ -61,28 +71,23 @@ def do_transfer(source, target, amount):
         if row is None:
             return False
 
-        # Begin transaction
         con.execute("BEGIN TRANSACTION")
 
-        # Update source account
         cur.execute(
             """
             UPDATE accounts SET balance=balance-? where id=?""",
             (amount, source),
         )
 
-        # Update target account
         cur.execute(
             """
             UPDATE accounts SET balance=balance+? where id=?""",
             (amount, target),
         )
 
-        # Commit the transaction
         con.commit()
         return True
     except Exception as e:
-        # Rollback in case of error
         con.rollback()
         raise e
     finally:

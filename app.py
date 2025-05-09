@@ -26,7 +26,6 @@ def authenticated(f):
     @wraps(f)
     def w(*args, **kwargs):
         if not logged_in():
-            # return render_template("login.html")
             return redirect("/login")
         return f(*args, **kwargs)
 
@@ -64,7 +63,9 @@ def login():
 @app.route("/dashboard", methods=["GET"])
 @authenticated
 def dashboard():
-    return render_template("dashboard.html", email=g.user)
+    # Get all accounts for the current user
+    user_accounts = get_user_accounts(g.user)
+    return render_template("dashboard.html", email=g.user, user_accounts=user_accounts)
 
 
 @app.route("/details", methods=["GET", "POST"])
@@ -75,19 +76,37 @@ def details():
 
     if request.method == "GET":
         account_number = request.args["account"]
+
+        balance = get_balance(account_number, g.user)
+
+        if balance is None:
+            flash("This enclosure doesn't exist or doesn't belong to you", "error")
+            return redirect("/dashboard")
+
+        # Generate a description based on the account number and balance
+        if balance > 100:
+            account_description = f"This is a large enclosure with {balance} emus."
+        elif balance > 50:
+            account_description = (
+                f"This is a medium-sized enclosure with {balance} emus."
+            )
+        elif balance > 0:
+            account_description = f"This is a small enclosure with just {balance} emus."
+        else:
+            account_description = "This enclosure is currently empty."
+
         return render_template(
             "details.html",
             user=g.user,
             account_number=account_number,
-            balance=get_balance(account_number, g.user),
+            balance=balance,
+            account_description=account_description,
         )
 
 
 @app.route("/transfer", methods=["GET", "POST"])
+@authenticated
 def transfer():
-    if not logged_in():
-        return render_template("login.html")
-
     if request.method == "GET":
         # Get all accounts for the current user
         user_accounts = get_user_accounts(g.user)
@@ -124,7 +143,7 @@ def transfer():
             "transfer.html", user=g.user, user_accounts=user_accounts
         )
     if amount > 1000:
-        flash("Worker ants can only carry 1,000 crumbs at a time", "error")
+        flash("You can only transport 1,000 emus at a time", "error")
         user_accounts = get_user_accounts(g.user)
         return render_template(
             "transfer.html", user=g.user, user_accounts=user_accounts
@@ -133,7 +152,7 @@ def transfer():
     # Verify source account belongs to user and has sufficient funds
     available_balance = get_balance(source, g.user)
     if available_balance is None:
-        flash("Source storage unit not found or doesn't belong to you", "error")
+        flash("Source enclosure not found or doesn't belong to you", "error")
         user_accounts = get_user_accounts(g.user)
         return render_template(
             "transfer.html", user=g.user, user_accounts=user_accounts
@@ -141,7 +160,7 @@ def transfer():
 
     if amount > available_balance:
         flash(
-            f"Insufficient crumbs! You only have {available_balance} available", "error"
+            f"Insufficient emus! You only have {available_balance} available", "error"
         )
         user_accounts = get_user_accounts(g.user)
         return render_template(
@@ -149,22 +168,20 @@ def transfer():
         )
 
     try:
-        result = do_transfer(source, target, amount)
+        result = do_transfer(source, target, amount, g.user)
         if result:
             flash(
-                f"Successfully transported {amount} crumbs to storage unit {target}",
+                f"Successfully transferred {amount} emus to enclosure {target}",
                 "success",
             )
         else:
-            flash(
-                "Transport failed. The destination storage unit may not exist.", "error"
-            )
+            flash("Transfer failed. The destination enclosure may not exist.", "error")
             user_accounts = get_user_accounts(g.user)
             return render_template(
                 "transfer.html", user=g.user, user_accounts=user_accounts
             )
     except Exception as e:
-        flash(f"An error occurred during transport: {str(e)}", "error")
+        flash(f"An error occurred during transfer: {str(e)}", "error")
         user_accounts = get_user_accounts(g.user)
         return render_template(
             "transfer.html", user=g.user, user_accounts=user_accounts

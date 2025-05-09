@@ -1,24 +1,29 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<h1>Welcome to Your Ant Colony's Treasury</h1>
+<h1>Welcome to your Emu Enterprise</h1>
 
 <div class="card ant-trail">
-  <div class="card-title">Grain Storage</div>
+  <div class="card-title">Emu Enclosures</div>
   <div class="card-content">
-    <p style="margin-bottom: 10px;">View your colony's food reserves</p>
-    <div style="display: flex; gap: 10px; margin-top: 15px;">
-      <a href="/details?account=100" class="btn">Communal Crumb Storage</a>
-      <a href="/details?account=998" class="btn">Winter Reserves</a>
+    <p style="margin-bottom: 10px;">View your emus</p>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px;">
+      {% if user_accounts %}
+        {% for account in user_accounts %}
+          <a href="/details?account={{ account[0] }}" class="btn">Enclosure #{{ account[0] }} ({{ account[1] }} emus)</a>
+        {% endfor %}
+      {% else %}
+        <p>You don't have any emu enclosures yet.</p>
+      {% endif %}
     </div>
   </div>
 </div>
 
 <div class="card ant-trail">
-  <div class="card-title">Distribute Resources</div>
+  <div class="card-title">Distribute Emu</div>
   <div class="card-content">
-    <p style="margin-bottom: 10px;">Transfer crumbs between storage locations</p>
-    <a href="/transfer" class="btn btn-success">Move Crumbs</a>
+    <p style="margin-bottom: 10px;">Transfer emus between enclosures</p>
+    <a href="/transfer" class="btn btn-success">Move Emus</a>
   </div>
 </div>
 {% endblock %}

@@ -23,8 +23,6 @@ def get_user_with_credentials(email, password):
         default_hash = (
             default_hash_row[0] if default_hash_row else pbkdf2_sha256.hash("default")
         )
-
-        # Query for the user
         cur.execute(
             """
             SELECT email, name, password FROM users where email=?""",

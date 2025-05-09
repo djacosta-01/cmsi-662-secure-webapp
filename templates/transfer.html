@@ -1,10 +1,10 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<h1>Transport Crumbs Between Storage Units</h1>
+<h1>Transport Emus Between Storage Units</h1>
 
 <div class="card">
-  <div class="card-title">Organize Colony Resources</div>
+  <div class="card-title">Organize Emu Resources</div>
   <div class="card-content">
     <form method="POST" action="/transfer">
       <div class="form-group">
@@ -12,26 +12,26 @@
         <select id="from" name="from" required>
           <option value="">-- Select Source Storage Unit --</option>
           {% for account in user_accounts %}
-          <option value="{{ account[0] }}">Storage Unit {{ account[0] }} - {{ account[1] }} crumbs available</option>
+          <option value="{{ account[0] }}">Storage Unit {{ account[0] }} - {{ account[1] }} emus available</option>
           {% endfor %}
         </select>
       </div>
       
       <div class="form-group">
         <label for="to">Destination Storage:</label>
-        <input type="text" id="to" name="to" placeholder="Where to deliver crumbs" required />
+        <input type="text" id="to" name="to" placeholder="Where to deliver emus" required />
         <div style="font-size: 12px; margin-top: 5px; color: #8B4513;">Enter any valid storage unit number (transfers to other colonies are permitted)</div>
       </div>
       
       <div class="form-group">
-        <label for="amount">Number of Crumbs:</label>
-        <input type="number" id="amount" name="amount" min="1" max="1000" placeholder="Max 1000 crumbs per journey" required />
-        <div style="font-size: 12px; margin-top: 5px; color: #8B4513;">Worker ants can carry max 1,000 crumbs per trip</div>
+        <label for="amount">Number of emus:</label>
+        <input type="number" id="amount" name="amount" min="1" max="1000" placeholder="Max 1000 emus per journey" required />
+        <div style="font-size: 12px; margin-top: 5px; color: #8B4513;">Worker ants can carry max 1,000 emus per trip</div>
       </div>
       
       <div class="form-group ant-trail" style="display: flex; gap: 10px; margin-top: 20px;">
-        <button type="submit" class="btn btn-success">Begin Transport</button>
-        <a href="/dashboard" class="btn">Return to Nest</a>
+        <button type="submit" class="btn btn-success">Begin Delivery</button>
+        <a href="/dashboard" class="btn">Return to Emu Dashboard</a>
       </div>
       
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
