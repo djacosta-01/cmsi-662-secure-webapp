@@ -1,5 +1,24 @@
-<h1>What would you like to do today?</h1>
-<p><a href="/details?account=100">Savings account details</a></p>
-<p><a href="/details?account=998">Checking account details</a></p>
-<p><a href="/transfer">Transfer</a></p>
-<p><a href="/logout">Logout</a></p>
+{% extends 'layout.html' %}
+
+{% block content %}
+<h1>Welcome to Your Ant Colony's Treasury</h1>
+
+<div class="card ant-trail">
+  <div class="card-title">Grain Storage</div>
+  <div class="card-content">
+    <p style="margin-bottom: 10px;">View your colony's food reserves</p>
+    <div style="display: flex; gap: 10px; margin-top: 15px;">
+      <a href="/details?account=100" class="btn">Communal Crumb Storage</a>
+      <a href="/details?account=998" class="btn">Winter Reserves</a>
+    </div>
+  </div>
+</div>
+
+<div class="card ant-trail">
+  <div class="card-title">Distribute Resources</div>
+  <div class="card-content">
+    <p style="margin-bottom: 10px;">Transfer crumbs between storage locations</p>
+    <a href="/transfer" class="btn btn-success">Move Crumbs</a>
+  </div>
+</div>
+{% endblock %}

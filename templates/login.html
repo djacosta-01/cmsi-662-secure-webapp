@@ -1,9 +1,27 @@
-{% if error %}
-<p style="color: red">{{ error }}</p>
-{% endif %}
-<form method="post" action="/login">
-  <p>Email: <input type="text" name="email" /></p>
-  <p>Password: <input type="password" name="password" /></p>
-  <p><input type="submit" value="Login" /></p>
-  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-</form>
+{% extends 'layout.html' %}
+
+{% block content %}
+<h1>Enter The Colony</h1>
+
+<div class="card">
+  <div class="card-content">
+    <form method="post" action="/login">
+      <div class="form-group">
+        <label for="email">Ant Identifier:</label>
+        <input type="text" id="email" name="email" placeholder="Enter your colony identifier" />
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Pheromone Key:</label>
+        <input type="password" id="password" name="password" placeholder="Enter your secret pheromone pattern" />
+      </div>
+      
+      <div class="form-group">
+        <button type="submit" class="btn">Join Colony</button>
+      </div>
+      
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    </form>
+  </div>
+</div>
+{% endblock %}

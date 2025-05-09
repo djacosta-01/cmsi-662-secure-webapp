@@ -1,5 +1,30 @@
-<p>Hi, {{ user }}</p>
+{% extends 'layout.html' %}
 
-<h1>Details for Account {{account_number}}</h1>
-<p>Your balance is {{ balance }}</p>
-<p><a href="/dashboard">Back to Dashboard</a></p>
+{% block content %}
+<h1>Storage Unit #{{account_number}} Status</h1>
+
+<div class="card">
+  <div class="card-title">Crumb Resource Tally</div>
+  <div class="card-content">
+    <p style="font-size: 18px; margin: 20px 0;">
+      <span class="crumb" style="font-size: 24px; font-weight: bold; color: #556B2F;">{{ balance }}</span>
+      <span style="font-style: italic; color: #8B4513;"> crumbs available</span>
+    </p>
+    
+    <p style="margin-bottom: 10px; font-size: 14px; color: #5e3a1e;">
+      {% if account_number == '100' %}
+        <i>This is your colony's communal storage for daily operations.</i>
+      {% elif account_number == '998' %}
+        <i>These are your winter reserves. Plan carefully!</i>
+      {% else %}
+        <i>This is a specialized resource storage unit.</i>
+      {% endif %}
+    </p>
+    
+    <div style="display: flex; gap: 10px; margin-top: 20px;">
+      <a href="/transfer" class="btn btn-success">Move Crumbs</a>
+      <a href="/dashboard" class="btn">Return to Nest</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
