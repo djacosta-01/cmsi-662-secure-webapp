@@ -226,20 +226,54 @@
         
         .card-content {
             color: #7D4427;
-        }
-    
-        .footer {
+        }        .footer {
             text-align: center;
             padding: 20px 0;
             color: #7D4427;
             font-size: 14px;
             border-top: 1px solid #E5D3B3;
-        }    </style>
+        }
+        
+        /* Australia Mode */
+        .australia-mode {
+            transform: rotate(180deg);
+            transition: transform 0.8s ease;
+        }
+        
+        #australia-mode {
+            background-color: #00008B; /* Dark blue from Australian flag */
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        #australia-mode:hover {
+            background-color: #5050FF;
+        }
+    </style>
+    
+    <script>
+        function toggleAustraliaMode() {
+            document.body.classList.toggle('australia-mode');
+            
+            // Update button text
+            const button = document.getElementById('australia-mode');
+            if (document.body.classList.contains('australia-mode')) {
+                button.innerHTML = '🌏 Normal Mode';
+            } else {
+                button.innerHTML = '🇦🇺 Australia Mode';
+            }
+        }
+    </script>
 </head>
-<body>
-    <div class="header">
+<body>    <div class="header">
         <div class="container">
             <div class="logo">Emu Enterprise</div>
+            <div class="nav-links">
+                <button id="australia-mode" class="btn" onclick="toggleAustraliaMode()">🇦🇺 Australia Mode</button>
+            </div>
             {% if g.user %}
             <div class="user-info">
                 G'day, {{ g.user }}!
